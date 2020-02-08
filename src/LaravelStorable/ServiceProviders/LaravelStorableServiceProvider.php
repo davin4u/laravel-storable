@@ -28,8 +28,12 @@ class LaravelStorableServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $parts = explode(DIRECTORY_SEPARATOR, __DIR__);
+
+        unset($parts[count($parts) - 1]);
+
         $this->publishes([
-            __DIR__ . '../configs/laravel-storable.php' => config_path('laravel-storable.php'),
+            implode(DIRECTORY_SEPARATOR, $parts) . '/configs/laravel-storable.php' => config_path('laravel-storable.php'),
         ]);
     }
 }

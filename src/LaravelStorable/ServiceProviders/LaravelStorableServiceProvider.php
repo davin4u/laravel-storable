@@ -23,7 +23,7 @@ class LaravelStorableServiceProvider extends ServiceProvider
                     return new MongoDBStorage($app->make(MongoDBClient::class));
             }
 
-            throw new \RuntimeException("Storable driver is not set or not supported.");
+            return null;
         });
     }
 

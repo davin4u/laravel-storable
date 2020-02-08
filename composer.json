@@ -11,9 +11,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.3",
+        "php": "^7.3",
         "mongodb/mongodb": "^1.5",
-        "laravel/framework": ">=5.8"
+        "illuminate/support": "^5.8",
+        "illuminate/config": "^5.8"
     },
     "extra": {
         "laravel": {

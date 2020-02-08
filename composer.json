@@ -13,8 +13,8 @@
     "require": {
         "php": "^7.3",
         "mongodb/mongodb": "^1.5",
-        "illuminate/support": "^5.8",
-        "illuminate/config": "^5.8"
+        "illuminate/support": "^6.2",
+        "illuminate/config": "^6.2"
     },
     "extra": {
         "laravel": {

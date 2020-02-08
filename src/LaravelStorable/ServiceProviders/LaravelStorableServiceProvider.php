@@ -18,7 +18,7 @@ class LaravelStorableServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Storage::class, function ($app) {
-            switch (config('laravel-storable.driver')) {
+            switch (config('laravel-storable.driver', 'mongodb')) {
                 case 'mongodb':
                     return new MongoDBStorage($app->make(MongoDBClient::class));
             }

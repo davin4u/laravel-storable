@@ -1,0 +1,30 @@
+{
+    "name": "davin4u/laravel-storable",
+    "description": "Helps to store entities in different storages",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Denis Gorgul",
+            "email": "davin4u@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.3",
+        "mongodb/mongodb": "^1.5",
+        "laravel/framework": "^5.8"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelStorable\\ServiceProviders\\LaravelStorableServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-0": {
+            "LaravelStorable": "src/"
+        }
+    }
+}

@@ -26,13 +26,28 @@ class Client implements MongoDBClient
      */
     final public function __construct()
     {
+
+    }
+
+    /**
+     * Create MongoDB client
+     */
+    public function createClient()
+    {
         $user       = config('laravel-storable.drivers.mongodb.user');
         $password   = config('laravel-storable.drivers.mongodb.password');
         $host       = config('laravel-storable.drivers.mongodb.host');
         $port       = config('laravel-storable.drivers.mongodb.port');
         $db         = config('laravel-storable.drivers.mongodb.database');
 
-        $this->client = new \MongoDB\Client("mongodb://$user:$password@$host:$port/$db");
+        try {
+            $this->client = new \MongoDB\Client("mongodb://$user:$password@$host:$port/$db");
+        }
+        catch (\Exception $e) {
+            $this->client = null;
+        }
+
+        return $this->client;
     }
 
     /**
@@ -41,6 +56,10 @@ class Client implements MongoDBClient
      */
     public function collection(string $name) : MongoDBCollection
     {
+        if (is_null($this->client)) {
+            $this->createClient();
+        }
+
         return new Collection($this->client->selectCollection(config('laravel-storable.drivers.mongodb.database'), $name));
     }
 
@@ -52,7 +71,7 @@ class Client implements MongoDBClient
     public static function __callStatic($name, $arguments)
     {
         if (is_null(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = (new static())->createClient();
         }
 
         if (method_exists(static::$instance, $name)) {
@@ -70,7 +89,7 @@ class Client implements MongoDBClient
     public function __call($name, $arguments)
     {
         if (is_null(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = (new static())->createClient();
         }
 
         if (method_exists(static::$instance, $name)) {
@@ -86,7 +105,7 @@ class Client implements MongoDBClient
     final public function __clone()
     {
         if (is_null(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = (new static())->createClient();
         }
 
         return static::$instance;

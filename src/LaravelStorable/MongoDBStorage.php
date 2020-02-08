@@ -96,4 +96,24 @@ class MongoDBStorage implements Storage
 
         return $this->client->collection($collection)->delete($id);
     }
+
+    /**
+     * @param string $name
+     * @return void
+     */
+    public function createCollection(string $name)
+    {
+        $this->client->selectDatabase(config('laravel-storable.drivers.mongodb.database'))
+                     ->createCollection($name);
+    }
+
+    /**
+     * @param string $name
+     * @return void
+     */
+    public function dropCollection(string $name)
+    {
+        $this->client->selectDatabase(config('laravel-storable.drivers.mongodb.database'))
+                     ->dropCollection($name);
+    }
 }

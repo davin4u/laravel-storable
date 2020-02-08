@@ -2,6 +2,7 @@
 
 namespace LaravelStorable\ServiceProviders;
 
+use LaravelStorable\Commands\InitCommand;
 use LaravelStorable\Contracts\Storage;
 use LaravelStorable\Drivers\MongoDB\Contracts\MongoDBClient;
 use LaravelStorable\Drivers\MongoDB\Mongo;
@@ -32,8 +33,16 @@ class LaravelStorableServiceProvider extends ServiceProvider
 
         unset($parts[count($parts) - 1]);
 
+        // publish config
         $this->publishes([
             implode(DIRECTORY_SEPARATOR, $parts) . '/configs/laravel-storable.php' => config_path('laravel-storable.php'),
         ]);
+
+        // register commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InitCommand::class
+            ]);
+        }
     }
 }

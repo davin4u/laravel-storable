@@ -12,5 +12,11 @@ return [
             'database' => env('MONGODB_DATABASE', 'MONGODB DATABASE NAME'),
             'collection' => env('MONGODB_DEFAULT_COLLECTION', 'default')
         ]
+    ],
+
+    'storable' => [
+        // put here a list of storable entities, f.e.
+        // \App\User::class,
+        // \App\Product::class
     ]
 ];

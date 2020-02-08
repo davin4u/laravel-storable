@@ -44,4 +44,16 @@ interface Storage
      * @return mixed
      */
     public function delete($id, $collection = null);
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function createCollection(string $name);
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function dropCollection(string $name);
 }

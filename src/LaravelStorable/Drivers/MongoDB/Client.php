@@ -12,14 +12,9 @@ use LaravelStorable\Drivers\MongoDB\Contracts\MongoDBCollection;
 class Client implements MongoDBClient
 {
     /**
-     * @var Client
-     */
-    protected static $instance;
-
-    /**
      * @var \MongoDB\Client
      */
-    protected $client;
+    protected static $client = null;
 
     /**
      * Client constructor.
@@ -34,6 +29,10 @@ class Client implements MongoDBClient
      */
     public function createClient()
     {
+        if (!is_null(static::$client)) {
+            return static::$client;
+        }
+
         $user       = config('laravel-storable.drivers.mongodb.user');
         $password   = config('laravel-storable.drivers.mongodb.password');
         $host       = config('laravel-storable.drivers.mongodb.host');
@@ -41,13 +40,13 @@ class Client implements MongoDBClient
         $db         = config('laravel-storable.drivers.mongodb.database');
 
         try {
-            $this->client = new \MongoDB\Client("mongodb://$user:$password@$host:$port/$db");
+            static::$client = new \MongoDB\Client("mongodb://$user:$password@$host:$port/$db");
         }
         catch (\Exception $e) {
-            $this->client = null;
+            static::$client = null;
         }
 
-        return $this->client;
+        return static::$client;
     }
 
     /**
@@ -56,11 +55,11 @@ class Client implements MongoDBClient
      */
     public function collection(string $name) : MongoDBCollection
     {
-        if (is_null($this->client)) {
+        if (is_null(static::$client)) {
             $this->createClient();
         }
 
-        return new Collection($this->client->selectCollection(config('laravel-storable.drivers.mongodb.database'), $name));
+        return new Collection(static::$client->selectCollection(config('laravel-storable.drivers.mongodb.database'), $name));
     }
 
     /**
@@ -70,12 +69,12 @@ class Client implements MongoDBClient
      */
     public static function __callStatic($name, $arguments)
     {
-        if (is_null(static::$instance)) {
-            static::$instance = (new static())->createClient();
+        if (is_null(static::$client)) {
+            static::$client = (new static())->createClient();
         }
 
-        if (method_exists(static::$instance, $name)) {
-            return $arguments ? static::$instance->{$name}($arguments) : static::$instance->{$name}();
+        if (method_exists(static::$client, $name)) {
+            return $arguments ? static::$client->{$name}(...$arguments) : static::$client->{$name}();
         }
 
         throw new \RuntimeException("Method $name does not exist.");
@@ -88,26 +87,14 @@ class Client implements MongoDBClient
      */
     public function __call($name, $arguments)
     {
-        if (is_null(static::$instance)) {
-            static::$instance = (new static())->createClient();
+        if (is_null(static::$client)) {
+            static::$client = (new static())->createClient();
         }
 
-        if (method_exists(static::$instance, $name)) {
-            return $arguments ? static::$instance->{$name}($arguments) : static::$instance->{$name}();
+        if (method_exists(static::$client, $name)) {
+            return $arguments ? static::$client->{$name}(...$arguments) : static::$client->{$name}();
         }
 
         throw new \RuntimeException("Method $name does not exist.");
-    }
-
-    /**
-     * @return mixed
-     */
-    final public function __clone()
-    {
-        if (is_null(static::$instance)) {
-            static::$instance = (new static())->createClient();
-        }
-
-        return static::$instance;
     }
 }

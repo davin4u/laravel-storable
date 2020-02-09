@@ -6,8 +6,10 @@ use LaravelStorable\Commands\InitCommand;
 use LaravelStorable\Contracts\Storage;
 use LaravelStorable\Drivers\MongoDB\Contracts\MongoDBClient;
 use LaravelStorable\Drivers\MongoDB\Mongo;
+use LaravelStorable\Observers\StorableObserver;
 use LaravelStorable\MongoDBStorage;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class LaravelStorableServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,17 @@ class LaravelStorableServiceProvider extends ServiceProvider
             $this->commands([
                 InitCommand::class
             ]);
+        }
+
+        // register observers
+        $observables = config('laravel-storable.observable', []);
+
+        if (!empty($observables)) {
+            foreach ($observables as $entityClass) {
+                if ((new $entityClass) instanceof Model) {
+                    $entityClass::observe(StorableObserver::class);
+                }
+            }
         }
     }
 }

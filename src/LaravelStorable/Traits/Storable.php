@@ -65,15 +65,17 @@ trait Storable
                 static::$storage = app()->make(Storage::class);
             }
 
-            if (!is_null($this->{$storableKey})) {
-                $this->storable = static::$storage->create($this->toStorableDocument(), $storableCollection);
+            $this->storable = static::$storage->create($this->getStorableData(), $storableCollection);
 
-                $this->update([
-                    $storableKey => $this->storable->getDocumentId()
-                ]);
-            }
+            $this->update([
+                $storableKey => $this->storable->getDocumentId()
+            ]);
 
             return;
+        }
+
+        foreach ($this->getStorableData() as $key => $value) {
+            $this->storable->{$key} = $value;
         }
 
         $this->storable->save();
@@ -122,5 +124,17 @@ trait Storable
         $storableKey = property_exists($this, 'storableKey') ? $this->storableKey : 'storable_id';
 
         return $query->whereIn($storableKey, is_array($storableId) ? $storableId : [$storableId]);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getStorableData()
+    {
+        if (method_exists($this, 'toStorableDocument')) {
+            return $this->toStorableDocument();
+        }
+
+        return $this->toArray();
     }
 }

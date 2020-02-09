@@ -18,5 +18,10 @@ return [
         // put here a list of storable entities, f.e.
         // \App\User::class,
         // \App\Product::class
+    ],
+
+    'observable' => [
+        // put here a list of entities to observe, f.e.
+        // \App\Products::class
     ]
 ];

@@ -97,14 +97,19 @@ class Document implements \LaravelStorable\Contracts\Document, \ArrayAccess
 
     /**
      * Delete storable document
+     * @return bool|void
      */
     public function delete()
     {
         if (!is_null($this->doc['_id'])) {
-            $this->storage->delete($this->doc['_id']);
+            if ($this->storage->delete($this->doc['_id'])) {
+                $this->doc = [];
 
-            $this->doc = [];
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**

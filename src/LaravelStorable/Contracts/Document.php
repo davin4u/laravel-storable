@@ -20,7 +20,7 @@ interface Document
     public function save();
 
     /**
-     * @return void
+     * @return bool
      */
     public function delete();
 

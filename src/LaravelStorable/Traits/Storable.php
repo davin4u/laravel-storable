@@ -83,6 +83,7 @@ trait Storable
 
     /**
      * Delete storable document
+     * @return bool|void
      */
     public function deleteStorableDocument()
     {
@@ -93,12 +94,16 @@ trait Storable
                 return;
             }
 
-            $this->storable->delete();
+            if ($this->storable->delete()) {
+                $this->update([
+                    $storableKey => null
+                ]);
 
-            $this->update([
-                $storableKey => null
-            ]);
+                return true;
+            }
         }
+
+        return false;
     }
 
     /**

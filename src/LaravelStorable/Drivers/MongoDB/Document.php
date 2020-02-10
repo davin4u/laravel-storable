@@ -9,7 +9,7 @@ use LaravelStorable\Contracts\Storage;
  * Class Document
  * @package LaravelStorable\Drivers\MongoDB
  */
-class Document implements \LaravelStorable\Contracts\Document, \ArrayAccess
+class Document implements \LaravelStorable\Contracts\Document
 {
     /**
      * @var mixed|array

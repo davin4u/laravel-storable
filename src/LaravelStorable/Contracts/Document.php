@@ -6,7 +6,7 @@ namespace LaravelStorable\Contracts;
  * Interface Document
  * @package LaravelStorable\Contracts
  */
-interface Document
+interface Document extends \ArrayAccess
 {
     /**
      * @param array $attributes
